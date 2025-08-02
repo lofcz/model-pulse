@@ -21,20 +21,40 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage(`Copied to clipboard: ${text}`);
     });
 
+// Register commands
     const checkForNewModelsCommand = vscode.commands.registerCommand('model-pulse.checkForNewModels', async () => {
         await checkForNewModels(context, modelTreeDataProvider);
     });
 
-    context.subscriptions.push(copyToClipboardCommand, checkForNewModelsCommand);
+    const searchModelsCommand = vscode.commands.registerCommand('model-pulse.searchModels', async () => {
+        const current = (modelTreeDataProvider as any)?.getSearchQuery?.() ?? '';
+        const searchQuery = await vscode.window.showInputBox({
+            prompt: 'Search models by name, ID, description, or organization',
+            placeHolder: 'Enter search term...',
+            value: current,
+            ignoreFocusOut: true
+        });
+        if (searchQuery !== undefined) {
+            modelTreeDataProvider.setSearchQuery(searchQuery);
+            // Update dynamic title/tooltip via context key
+            vscode.commands.executeCommand('setContext', 'modelPulse.hasFilter', !!searchQuery);
+        }
+    });
 
-    // Set up a recurring check every hour
+    const clearSearchCommand = vscode.commands.registerCommand('model-pulse.clearSearch', () => {
+        modelTreeDataProvider.setSearchQuery('');
+        vscode.commands.executeCommand('setContext', 'modelPulse.hasFilter', false);
+    });
+
+    context.subscriptions.push(copyToClipboardCommand, checkForNewModelsCommand, searchModelsCommand, clearSearchCommand);
+
     setInterval(() => {
         console.log('ModelPulse: Hourly check for new models.');
         checkForNewModels(context, modelTreeDataProvider);
     }, 3600000);
 
     updateStatusBar(context);
-    checkForNewModels(context, modelTreeDataProvider); // Initial check on activation
+    checkForNewModels(context, modelTreeDataProvider);
     console.log('Congratulations, your extension "model-pulse" is now active!');
 }
 

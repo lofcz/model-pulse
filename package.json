@@ -2,7 +2,7 @@
     "name": "model-pulse",
     "displayName": "Model Pulse",
     "description": "Stay updated with the latest free models from OpenRouter.",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "lofcz",
     "license": "SEE LICENSE IN LICENSE",
     "repository": {
@@ -29,8 +29,32 @@
             {
                 "command": "model-pulse.copyToClipboard",
                 "title": "ModelPulse: Copy to Clipboard"
+            },
+            {
+                "command": "model-pulse.searchModels",
+                "title": "Search",
+                "icon": "$(search)"
+            },
+            {
+                "command": "model-pulse.clearSearch",
+                "title": "Clear",
+                "icon": "$(trash)"
             }
         ],
+        "menus": {
+            "view/title": [
+                {
+                    "command": "model-pulse.searchModels",
+                    "when": "view == model-pulse-activitybar && !modelPulse.hasFilter",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "model-pulse.clearSearch",
+                    "when": "view == model-pulse-activitybar && modelPulse.hasFilter",
+                    "group": "navigation@1"
+                }
+            ]
+        },
         "viewsContainers": {
             "activitybar": [
                 {
@@ -59,7 +83,8 @@
         "watch-tests": "tsc -p . -w --outDir out",
         "pretest": "npm run compile-tests && npm run compile && npm run lint",
         "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js"
+        "test": "node ./out/test/runTest.js",
+        "publish": "node ./scripts/publish.js"
     },
     "devDependencies": {
         "@types/vscode": "^1.84.0",

@@ -6,6 +6,7 @@ export class ModelTreeDataProvider implements vscode.TreeDataProvider<vscode.Tre
     readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
     private models: any[] = [];
+    private searchQuery: string = '';
 
     constructor() {}
 
@@ -19,7 +20,6 @@ export class ModelTreeDataProvider implements vscode.TreeDataProvider<vscode.Tre
 
     getChildren(element?: vscode.TreeItem): Thenable<vscode.TreeItem[]> {
         if (element && element.id) {
-            // This is a model item, so return its properties.
             const modelId = element.id;
 
             const providerValue = 'openrouter';
@@ -55,7 +55,8 @@ export class ModelTreeDataProvider implements vscode.TreeDataProvider<vscode.Tre
             return Promise.resolve([providerItem, baseUrlItem, modelIdItem]);
         } else {
             // This is the root, so return the list of models.
-            return Promise.resolve(this.models.map(model => {
+            const list = this.filterModels();
+            return Promise.resolve(list.map(model => {
                 const item = new vscode.TreeItem(model.name, vscode.TreeItemCollapsibleState.Collapsed);
                 item.id = model.id;
                 item.description = `ID: ${model.id}`;
@@ -68,5 +69,26 @@ export class ModelTreeDataProvider implements vscode.TreeDataProvider<vscode.Tre
     updateModels(models: any[]) {
         this.models = models;
         this.refresh();
+    }
+
+    setSearchQuery(query: string): void {
+        this.searchQuery = (query || '').toLowerCase();
+        this.refresh();
+    }
+
+    getSearchQuery(): string {
+        return this.searchQuery;
+    }
+
+    private filterModels(): any[] {
+        if (!this.searchQuery) {
+            return this.models;
+        }
+        return this.models.filter(model =>
+            model?.name?.toLowerCase().includes(this.searchQuery) ||
+            model?.id?.toLowerCase().includes(this.searchQuery) ||
+            model?.description?.toLowerCase().includes(this.searchQuery) ||
+            model?.organization?.toLowerCase().includes(this.searchQuery)
+        );
     }
 }
