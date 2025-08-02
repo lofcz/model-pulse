@@ -1,0 +1,83 @@
+{
+    "name": "model-pulse",
+    "displayName": "Model Pulse",
+    "description": "Stay updated with the latest free models from OpenRouter.",
+    "version": "0.0.1",
+    "publisher": "lofcz",
+    "license": "SEE LICENSE IN LICENSE",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lofcz/model-pulse.git"
+    },
+    "engines": {
+        "vscode": "^1.84.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./dist/extension.js",
+    "icon": "dist/icon.png",
+    "contributes": {
+        "commands": [
+            {
+                "command": "model-pulse.checkForNewModels",
+                "title": "ModelPulse: Check for New Models"
+            },
+            {
+                "command": "model-pulse.copyToClipboard",
+                "title": "ModelPulse: Copy to Clipboard"
+            }
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "model-pulse-activitybar",
+                    "title": "Model Pulse",
+                    "icon": "dist/icon.png"
+                }
+            ]
+        },
+        "views": {
+            "activitybar": [
+                {
+                    "id": "model-pulse-activitybar",
+                    "name": "ModelPulse",
+                    "icon": "dist/icon.png"
+                }
+            ]
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run package",
+        "compile": "webpack",
+        "watch": "webpack --watch",
+        "package": "webpack --mode production --devtool hidden-source-map",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "pretest": "npm run compile-tests && npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.84.0",
+        "@types/mocha": "^10.0.3",
+        "@types/node": "18.x",
+        "@typescript-eslint/eslint-plugin": "^6.9.0",
+        "@typescript-eslint/parser": "^6.9.0",
+        "eslint": "^8.52.0",
+        "glob": "^10.3.10",
+        "mocha": "^10.2.0",
+        "typescript": "^5.2.2",
+        "ts-loader": "^9.5.0",
+        "webpack": "^5.89.0",
+        "webpack-cli": "^5.1.4",
+        "@vscode/test-electron": "^2.3.6",
+        "copy-webpack-plugin": "^12.0.2"
+    },
+    "dependencies": {
+        "axios": "^1.6.1"
+    }
+}
