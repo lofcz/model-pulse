@@ -1,7 +1,7 @@
 <div align="center">
 
 <a href="https://marketplace.visualstudio.com/items?itemName=lofcz.model-pulse"><picture>
-<img alt="Model Pulse Logo" src="https://github.com/lofcz/model-pulse/raw/main/media/icon.png" width="160px">
+<img alt="Model Pulse Logo" src="https://github.com/user-attachments/assets/a080d0b7-a5c1-4043-816b-c9bc94c872fa" width="160px">
 </picture></a>
 
 <h1 align="center">Model Pulse</h1>
